@@ -1,0 +1,1 @@
+echo "var compiledContract=`solc --optimize --combined-json abi,bin,interface Voting.sol`" > contract.js
