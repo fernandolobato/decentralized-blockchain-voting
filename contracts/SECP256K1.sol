@@ -129,14 +129,14 @@ library Secp256k1 {
         isPK = onCurve(P);
     }
 
-    /// @dev See Curve.isPubKey
-    // TODO: We assume we are given affine co-ordinates for now
-    function isPubKey(uint[3] memory P) internal constant returns (bool isPK) {
-        uint[2] memory a_P;
-        a_P[0] = P[0];
-        a_P[1] = P[1];
-        isPK = onCurve(a_P);
-    }
+    // /// @dev See Curve.isPubKey
+    // // TODO: We assume we are given affine co-ordinates for now
+    // function isPubKey(uint[3] memory P) internal constant returns (bool isPK) {
+    //     uint[2] memory a_P;
+    //     a_P[0] = P[0];
+    //     a_P[1] = P[1];
+    //     isPK = onCurve(a_P);
+    // }
 
     /// @dev See Curve.validateSignature
     function validateSignature(bytes32 message, uint[2] rs, uint[2] Q) internal constant returns (bool) {

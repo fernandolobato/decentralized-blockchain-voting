@@ -14,7 +14,7 @@ library LinkableRingSignature {
     // Modulus for private keys (sub-group)
     uint constant nn = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
 
-    function mapToCurve(uint256 r) constant returns (uint256[3] memory rG) {
+    function mapToCurve(uint256 r) internal constant returns (uint256[3] memory rG) {
         uint[2] memory G;
         G[0] = Gx;
         G[1] = Gy;
@@ -30,7 +30,7 @@ library LinkableRingSignature {
     }   
 
     function h1(uint256[] y, uint256[2] link, string message, uint256[2] z_1, uint256[2] z_2) internal constant  returns (uint256) {
-        return uint256(sha3(y, link, message, z_1, z_2)) ;
+        return uint256(sha3(y, link, message, z_1, z_2));
     }
 
     function hashToInt(uint256[] y) internal constant  returns (uint256){

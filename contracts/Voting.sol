@@ -25,7 +25,7 @@ contract owned {
 
 contract Voting is owned{
 
-    enum State { SETUP, REGISTRATION, VOTE, FINISHED, READY_TO_TALLY }
+    enum State { SETUP, REGISTRATION, VOTING, FINISHED, READY_TO_TALLY }
     State public state;
 
     modifier inState(State s) {
@@ -34,7 +34,6 @@ contract Voting is owned{
         }
         _;
     }
-
 
     /****************************************
                     SETUP DATA
@@ -68,8 +67,12 @@ contract Voting is owned{
     /****************************************/
 
     uint public currentRingIdx; 
-    mapping(uint => uint256[]) public rings;
-    mapping(bytes32 => uint) public hashRingToIdx;
+    mapping(uint => uint256[]) public ring;
+
+    //This works the other way expected...
+    uint256[2][] public voters;
+    mapping(uint256 => uint) public hashRingToIdx;
+    mapping(bytes32 => bool) public registeredKeys;
 
     /****************************************
              END REGISTRATION DATA
@@ -83,25 +86,22 @@ contract Voting is owned{
     we could store the signature for future verification?
 
     /****************************************/
-
     bytes32[] public encryptedVotes;
     
     // Mapping to verify if anybody voter and where
     // their vote is stored.
-    mapping(bytes32 => uint) registeredVoteLink;
+    mapping(bytes32 => uint) public registeredVoteLink;
 
     /****************************************
                   END VOTE DATA
     /****************************************/
 
 
-
-
-
     function Voting() {
         state = State.SETUP;
         currentRingIdx = 0;
     }
+
 
     function finishSetUp(
         uint _numVoterPerRing,
@@ -131,6 +131,10 @@ contract Voting is owned{
             return false;
         }
 
+        if(Secp256k1.isPubKey(_thresholdKey) == false) {
+            return false;
+        }
+
         numVoterPerRing = _numVoterPerRing;
         registrationStartTime = _registrationStartTime;
         registrationEndTime = _registrationEndTime;
@@ -144,18 +148,94 @@ contract Voting is owned{
         return true;
     }
 
-    // TODO: Everything
-    function registerVoter() inState(State.REGISTRATION) onlyOwner returns (bool){
+    // TODO: Test Case for multiple rings
+    function registerVoter(uint256[2] publicKey) inState(State.REGISTRATION) onlyOwner returns (bool){
         
+        // Voter registration period already over.
+        // TODO: Pass to next phase??
         if(block.timestamp > registrationEndTime) {
-            throw; // throw returns the voter's ether, but exhausts their gas.
+            return false;
+        }
+
+        if(Secp256k1.isPubKey(publicKey) == false) {
+            return false;
+        }
+
+        if(registeredKeys[sha3(publicKey)]) {
+            return false;
+        }
+
+        //Ring just filled up.
+        if(ring[currentRingIdx].length / 2 == numVoterPerRing) {
+            uint256 ringHash = LinkableRingSignature.hashToInt(ring[currentRingIdx]);
+            hashRingToIdx[ringHash] = currentRingIdx;
+            currentRingIdx += 1;
+        }
+
+        ring[currentRingIdx].push(publicKey[0]);
+        ring[currentRingIdx].push(publicKey[1]);
+        voters.push([publicKey[0], publicKey[1]]);
+        registeredKeys[sha3(publicKey)] = true;
+
+        //Last one hit the lights.
+        if(ring[currentRingIdx].length / 2 == numVoterPerRing) {
+            uint256 closeringHash = LinkableRingSignature.hashToInt(ring[currentRingIdx]);
+            hashRingToIdx[closeringHash] = currentRingIdx;
+            currentRingIdx += 1;
         }
 
         return true;
     }
 
+    function endRegistrationPhase() inState(State.VOTING) onlyOwner returns (bool) {
+
+        if(block.timestamp < registrationEndTime) {
+            return false;
+        }
+
+        state = State.VOTING;
+
+        return true;
+    }
+
+    function castVote(string encryptedVote, uint256[] pubKeys, uint256 c_0, uint256[] signature, uint256[2] link) returns (bool){
+        
+        if(registeredVoteLink[sha3(link)] == 0) {
+            //Check for the first poor bastard who actually voted with
+            // idx cero.
+            return false;
+        }
+        
+        // Ring sig is valid =)
+        if(LinkableRingSignature.verifyRingSignature(encryptedVote, pubKeys, c_0, signature, link)) {
+
+        }
+
+        return false;
+    }
+
+    function getNumRegisterVoters() constant returns (uint) {
+        return voters.length;
+    }
+
     function verifyRingSignature(string message, uint256[] y, uint256 c_0, uint256[] s, uint256[2] link) constant returns (bool) {
         return LinkableRingSignature.verifyRingSignature(message, y, c_0, s, link);
+    }
+
+    function mapToCurve(uint256 r) constant returns (uint256[3] memory rG) {
+        return LinkableRingSignature.mapToCurve(r);
+    }
+
+    function h2(uint256[] y) constant  returns (uint256[2] memory Q) {
+        return LinkableRingSignature.h2(y);
+    }   
+
+    function h1(uint256[] y, uint256[2] link, string message, uint256[2] z_1, uint256[2] z_2) constant  returns (uint256) {
+        return LinkableRingSignature.h1(y, link, message, z_1, z_2);
+    }
+
+    function hashToInt(uint256[] y) constant  returns (uint256){
+        return LinkableRingSignature.hashToInt(y);
     }
 
 }

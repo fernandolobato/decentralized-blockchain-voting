@@ -16,7 +16,37 @@ var registrationVotingGap = (60 * 10);
 var votingStartTime = registrationEndTime + registrationVotingGap;
 var votingEndTime = votingStartTime + (60 * 10);
 var secretShareVerifyPublicParams = [123, 123, 123];
-var thresholdKey = [1, 2];
+var thresholdKey = [new BigNumber('61598507609444339782700229998757014587305252825918919679374877505379218840344'), new BigNumber('56459345504517168965835287035258895834335349081953570984957421675645020814131')];
 
-contract.finishSetUp.call(numVoterPerRing, registrationStartTime, registrationEndTime, registrationVotingGap, votingStartTime, votingEndTime, secretShareVerifyPublicParams, thresholdKey);
+
+contract.finishSetUp.call(
+    numVoterPerRing,
+    registrationStartTime,
+    registrationEndTime,
+    registrationVotingGap,
+    votingStartTime,
+    votingEndTime,
+    secretShareVerifyPublicParams,
+    thresholdKey);
+
+contract.finishSetUp.sendTransaction(
+    numVoterPerRing,
+    registrationStartTime,
+    registrationEndTime,
+    registrationVotingGap,
+    votingStartTime,
+    votingEndTime,
+    secretShareVerifyPublicParams,
+    thresholdKey,
+    {from:eth.accounts[0], gas:4200000});
+
+
+var pubKey = [new BigNumber("67235805167425861068089906426919154027038855607351758310384798001184755494578"), new BigNumber("81841085106827978484619575410326988922534763137673026675078713210806441367876")];
+
+contract.registerVoter.call(pubKey);
+contract.registerVoter.sendTransaction(pubKey, {from:eth.accounts[0], gas:4200000});
+
+
+var pubKey2 = [new BigNumber("85473034565916135247677271420570079822810530773175997339048595143479354248184"), new BigNumber("35875461274977760536341633265829638010372913780954251651746349580793542787653")];
+contract.registerVoter.sendTransaction(pubKey2, {from:eth.accounts[0], gas:4200000});
 
