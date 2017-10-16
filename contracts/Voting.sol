@@ -2,26 +2,8 @@ pragma solidity ^0.4.10;
 
 import "./SECP256k1.sol";
 import "./LinkableRingSignature.sol";
+import "./Owned.sol";
 
-contract owned {
-    address public owner;
-
-    /* Initialise contract creator as owner */
-    function owned() {
-        owner = msg.sender;
-    }
-
-    /* Function to dictate that only the designated owner can call a function */
-    modifier onlyOwner {
-        if(owner != msg.sender) throw;
-        _;
-    }
-
-    /* Transfer ownership of this contract to someone else */
-    function transferOwnership(address newOwner) onlyOwner() {
-        owner = newOwner;
-    }
-}
 
 contract Voting is owned{
 
@@ -53,7 +35,7 @@ contract Voting is owned{
     uint public minimumPhaseTime = 10;
 
     // Parameters for threshold cryptosystem.
-    uint256[] public secretShareVerifyPublicParams;
+    uint256[2][] public secretShareVerifyPublicParams;
     uint256[] public secretShare;
     uint256[2] public thresholdKey;
 
@@ -86,7 +68,7 @@ contract Voting is owned{
     we could store the signature for future verification?
 
     /****************************************/
-    bytes32[] public encryptedVotes;
+    string[] public encryptedVotes;
     
     // Mapping to verify if anybody voter and where
     // their vote is stored.
@@ -102,7 +84,6 @@ contract Voting is owned{
         currentRingIdx = 0;
     }
 
-
     function finishSetUp(
         uint _numVoterPerRing,
         uint _registrationStartTime,
@@ -110,7 +91,7 @@ contract Voting is owned{
         uint _registrationVotingGap,
         uint _votingStartTime,
         uint _votingEndTime,
-        uint256[] _secretShareVerifyPublicParams,
+        uint256[2][] _secretShareVerifyPublicParams,
         uint256[2] _thresholdKey) inState(State.SETUP) onlyOwner returns (bool) {
 
         if(_numVoterPerRing > maxNumberVotersPerRing) {
@@ -123,8 +104,9 @@ contract Voting is owned{
 
         if(_registrationStartTime + minimumPhaseTime > _registrationEndTime){
             return false;
-        }
+        }   
 
+        // Missing a test for this.
         if(_registrationEndTime > _votingStartTime ||
             _registrationEndTime + _registrationVotingGap >_votingStartTime ||
             _votingStartTime + minimumPhaseTime > _votingEndTime) {
@@ -133,6 +115,12 @@ contract Voting is owned{
 
         if(Secp256k1.isPubKey(_thresholdKey) == false) {
             return false;
+        }
+
+        for(uint i = 0; i < _secretShareVerifyPublicParams.length; i++) {
+            if(Secp256k1.isPubKey(_secretShareVerifyPublicParams[i]) == false) {
+                return false;
+            }
         }
 
         numVoterPerRing = _numVoterPerRing;
@@ -198,44 +186,32 @@ contract Voting is owned{
         return true;
     }
 
-    function castVote(string encryptedVote, uint256[] pubKeys, uint256 c_0, uint256[] signature, uint256[2] link) returns (bool){
+
+    function castVote(
+        string encryptedVote,
+        uint256[] pubKeys,
+        uint256 c_0,
+        uint256[] signature,
+        uint256[2] link) returns (bool){
         
-        if(registeredVoteLink[sha3(link)] == 0) {
-            //Check for the first poor bastard who actually voted with
-            // idx cero.
+        // This link has already been submited.
+        if(registeredVoteLink[sha3(link)] != 0) {
             return false;
         }
         
         // Ring sig is valid =)
         if(LinkableRingSignature.verifyRingSignature(encryptedVote, pubKeys, c_0, signature, link)) {
-
+            
+            encryptedVotes.push(encryptedVote);
+            registeredVoteLink[sha3(link)] = encryptedVotes.length;
+            return true;
         }
 
         return false;
     }
 
+
     function getNumRegisterVoters() constant returns (uint) {
         return voters.length;
     }
-
-    function verifyRingSignature(string message, uint256[] y, uint256 c_0, uint256[] s, uint256[2] link) constant returns (bool) {
-        return LinkableRingSignature.verifyRingSignature(message, y, c_0, s, link);
-    }
-
-    function mapToCurve(uint256 r) constant returns (uint256[3] memory rG) {
-        return LinkableRingSignature.mapToCurve(r);
-    }
-
-    function h2(uint256[] y) constant  returns (uint256[2] memory Q) {
-        return LinkableRingSignature.h2(y);
-    }   
-
-    function h1(uint256[] y, uint256[2] link, string message, uint256[2] z_1, uint256[2] z_2) constant  returns (uint256) {
-        return LinkableRingSignature.h1(y, link, message, z_1, z_2);
-    }
-
-    function hashToInt(uint256[] y) constant  returns (uint256){
-        return LinkableRingSignature.hashToInt(y);
-    }
-
 }
