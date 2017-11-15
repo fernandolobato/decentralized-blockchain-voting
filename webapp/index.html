@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Admin Page</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="./web3.min.js" type="text/javascript"></script>
+		<script src="../build/Voting.js"></script>
+
+		<link rel="stylesheet" href="assets/css/tingle.css">
+		<script src="assets/js/tingle.js"></script>
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-diamond"></span>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>Decentralized Voting</h1>
+								
+								<p id='electionDescription'>
+									
+								</p>
+
+							</div>
+						</div>
+						<nav>
+							<ul>
+								<li id="setupTabButton">
+									<a href="#intro">Setup</a>
+								</li>
+
+								<li id="registerTabButton">
+									<a href="#work">Register</a>
+								</li>
+
+								<li id="endRegistration">
+									<a id="endRegistration" href="#end">End Registration</a>
+								</li>
+
+								<li id="viewVotersTabButton">
+									<a id="viewVotersButton" href="#about">View Voters</a>
+								</li>
+
+								<li id="viewVotesTabButton">
+									<a href="#contact">View Votes</a>
+								</li>
+
+								<li id="finishVotingPhaseButton">
+									<a href="#">End Voting Phase</a>
+								</li>
+
+								<li id="tallyTabButton">
+									<a href="#elements">Tally up!</a>
+								</li>
+							</ul>
+						</nav>
+					</header>
+
+				
+
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- SETUP ELECTION -->
+							<article id="intro">
+								<h2 class="major">Setup Election</h2>
+								
+								<form method="post" action="#">
+									
+									<div class="field half first">
+										<label for="numVoterPerRing">Number of Voter per Ring</label>
+										<input type="number" min=5 value=5 name="numVoterPerRing" id="numVoterPerRing" />
+									</div>
+									
+									<div class="field half">
+										<label for="numVotingOptions">Number of Voting Options</label>
+										<input type="number" min=2 value=2 name="numVotingOptions" id="numVotingOptions" />
+									</div>
+
+									<div class="field">
+										<label for="registrationStartTime">Registration Start Time</label>
+										<input id="registrationStartTime" name="registrationStartTime" type="datetime-local">
+									</div>
+
+									<div class="field">
+										<label for="registrationEndTime">Registration End Time</label>
+										<input id="registrationEndTime" name="registrationEndTime" type="datetime-local">
+									</div>
+
+									<div class="field">
+										<label for="votingStartTime">Voting Start Time</label>
+										<input id="votingStartTime" name="votingStartTime" type="datetime-local">
+									</div>
+
+									<div class="field">
+										<label for="VotingEndTime">Voting End Time</label>
+										<input id="votingEndTime" name="VotingEndTime" type="datetime-local">
+									</div>
+
+									<div class="field half first">
+										<label for="tVoters">t</label>
+										<input type="number" min=0 value=10 name="tVoters" id="tVoters" />
+									</div>
+									
+									<div class="field half">
+										<label for="nVoters">n</label>
+										<input type="text" min=0 value=25 name="nVoters" id="nVoters" />
+									</div>
+
+									<div class="field">
+										<label for="VotingEndTime">Theshold Parameters Upload</label>
+										<input id="uploadThresholdParamsButton" type="file" onchange='openFile(event);' class="center">
+									</div>
+
+									<div class="field">
+										<button id="registerElection" class="button special icon fa-download center">Register Election Parameters</button>
+									</div>
+
+								</form>	
+
+																
+							</article>
+						<!-- END SETUP ELECTION -->
+
+						<!-- REGISTER VOTERS -->
+							
+							<article id="work">
+								<h2 class="major">Register Voter</h2>
+								<form action="#" method="post">
+									<div class="field">
+										<label for="pubKeyToRegisterX">Public Key To Register</label>
+										<input type="text" id="pubKeyToRegisterX" name="pubKeyToRegisterX" >
+									</div>
+
+									<div class="field">
+										<input type="text" id="pubKeyToRegisterY" name="pubKeyToRegisterY" >
+									</div>
+
+									<div class="field">
+										<button id="registerVoter" class="button special icon fa-download center">Register Voter</button>
+									</div>
+								</form>
+							</article>
+
+						<!-- END REGISTER VOTERS -->
+
+						<!-- About -->
+							<article id="about">
+								
+								<h2 class="major">Registered Voters</h2>
+								
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>Public Key</th>
+												<th>Ring Idx</th>
+												<th>Voter Idx</th>
+											</tr>
+										</thead>
+										<tbody id="registeredPublicKeyTable">
+											
+										</tbody>
+									</table>
+								</div>
+							</article>
+
+						<!-- Contact -->
+							<article id="contact">
+								<h2 class="major">Votes</h2>
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>C</th>
+												<th>r</th>
+											</tr>
+										</thead>
+										<tbody id="registeredVotesTable">
+											
+										</tbody>
+									</table>
+								</div>
+							</article>
+
+						<!-- Elements -->
+							<article id="elements">
+								<h2 class="major">Election Result</h2>
+								<table>
+                                    <thead>
+                                        <tr>
+                                            <th>Option No.</th>
+                                            <th>Number of Votes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="electionResults">
+                                        
+                                    </tbody>
+                                </table>
+								
+							</article>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						
+					</footer>
+
+			</div>
+
+			<div id="modal">
+				<form method="post" action="#">		
+						<label for="passcode">Passcode</label>
+						<input class="center" type="password" name="passcode" id="passcode" />
+				</form>
+			</div>
+
+		<!-- Custom Styles -->
+			<link rel="stylesheet" href="assets/css/custom.css">
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="scripts/general.js"></script>
+			<script src="scripts/admin.js"></script>
+			<script src="scripts/setup.js"></script>
+			<script src="scripts/register.js"></script>
+			<script src="scripts/votes.js"></script>
+
+	</body>
+</html>

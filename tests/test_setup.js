@@ -1,26 +1,35 @@
-loadScript('/Users/fernandolobato/Desktop/tesina/blockchain_voting/deploy/deploy.js');
+loadScript(PROJECT_PATH + 'deploy/deploy.js');
 
-var numVoterPerRing = 50;
+//loadScript(PROJECT_PATH + 'tests/test_setup.js');
+
+
+var numVoterPerRing = 5;
 var registrationStartTime = eth.getBlock(eth.blockNumber).timestamp + (60 * 5);
 var registrationEndTime = registrationStartTime + (60 * 10);
 var registrationVotingGap = (60 * 10);
 var votingStartTime = registrationEndTime + registrationVotingGap;
 var votingEndTime = votingStartTime + (60 * 10);
-var thresholdKey = [new BigNumber('90707198880225589485528336504749167732206651384440532747977047495411092046340'), new BigNumber('77084686888007402684172433506500060614310963628784863865537207333428118762045')];
-var secretShareVerifyPublicParams = [[new BigNumber('90707198880225589485528336504749167732206651384440532747977047495411092046340'), new BigNumber('77084686888007402684172433506500060614310963628784863865537207333428118762045')],[new BigNumber('49350005808383302783042045427704947485544722476824293903450283537989159942450'), new BigNumber('90108999286733602337371949814062733273551140570796147712088604473945890851861')],[new BigNumber('64339514700532449445185865156921574028463049708070436070900564526691351119767'), new BigNumber('26158242204126733289338399713561943963149172697945046488891245334023385597880')],[new BigNumber('58902117177447791115821116144889288190100789255069829584719574514399215991577'), new BigNumber('20289824429026413922144544816472085423183208637154748624463959312121668442941')],[new BigNumber('105017402916506244200490181456334332313176026815639637721625193522493368665828'), new BigNumber('7961995489715701823898250278072888891793398145248077940672200395381755806101')],[new BigNumber('33804538464200777412681467085190814485545172357595015290431676178288082772180'), new BigNumber('104108737397705816236270176988569207945307324676913114702351976851153051956532')],[new BigNumber('104577946860589706899769219675820042681268801449041759597884768012039533345581'), new BigNumber('59507489266175605398457522727785180031610942465344835354674122188699674146582')],[new BigNumber('7893626809082308123054331426479839645471592744985363512465459223889838147396'), new BigNumber('7618630237953768918491256097089925269516803227910825566337876250768439736475')],[new BigNumber('88615539394742769173526331498704337847300014777132898371183736363007263005927'), new BigNumber('91436632728213246267575217039600247758814574357058693804490587593952838216981')],[new BigNumber('47613066797889855795182695765873577419680073619907936513971097498002506152977'), new BigNumber('7188155867287692306159154692068164186742420749317223739373299333559113076583')]];
 
-deploySmartContractTest(testCorrectFinishSetup);
+var numberVoterOptions = 3;
+
+var tParties = 10;
+var nParties = 25;
+
+var thresholdKey = [new BigNumber('61231775618690165749564626470120491105592826495162750724593896247258543726202'), new BigNumber('61210584217842508670284023462702207750414782368184173586057315191500955814075')];
+var secretShareVerifyPublicParams = [[new BigNumber('61231775618690165749564626470120491105592826495162750724593896247258543726202'), new BigNumber('61210584217842508670284023462702207750414782368184173586057315191500955814075')],[new BigNumber('86249214903156846881173062760386493272742615530456254094026145804375082674307'), new BigNumber('103835414976189216798227704480813156397572971170358261640100996265141919055658')],[new BigNumber('72815513936235049753056900462662145672927508400758101355240998881650041473265'), new BigNumber('64854380921284584116438919150710501460402538565885004891896884143489589953633')],[new BigNumber('41473948288220371232483447366693118685029139903501907284820882962284857079184'), new BigNumber('70039376540869677952556905675738034873325390196595211523535316555797932298315')],[new BigNumber('33325253144436861371584666908914349404301118113273888630625560458154048443059'), new BigNumber('83096491359864766763122509200953953210830648365586320898876670888634984509131')],[new BigNumber('17343464536302978469888526004404365276868281315156880049569103710702256014839'), new BigNumber('42621027713496445687907503031434797767564370645967452666785364134380066830940')],[new BigNumber('39722877204861822022404555666983592883155685926493216556761416146792625749889'), new BigNumber('89931468365399042027304040020651702779404428425256542129486962922662194299245')],[new BigNumber('71550092611500542563417696591121625930379907274946087689105566639836612132193'), new BigNumber('65037326778386928730112745133474854659701472539919062239144581337603721466221')],[new BigNumber('8390946166535652714924983470918077528369511074170095701001494092851616986517'), new BigNumber('41003026113083387422644684657446647113634791382214538226065181050826778798660')],[new BigNumber('28693387683278076925609982250307226709867846450301437123712178887675804545043'), new BigNumber('42233557614234217668271586036841895547952904798127899107390066911924554872669')]];
 
 
 function testCorrectFinishSetup(e, contract) {
-    
+    console.log('\n-------Begin Test For Contract Setup-------\n');
+
     assert(contract.state.call() == 0, 'Contract is in inital state');
 
-    /* Execute all functions that don't change state*/
+    // Execute all functions that don't change state 
     testThresholdKeyNotValid(e, contract);
     testSecretPublicParamsNotValid(e, contract);
     testMaxVotersPerRing(e, contract);
     testInvalidStartTime(e, contract);
+
 
     var validRegistrationParameters = contract.finishSetUp.call(
         numVoterPerRing,
@@ -29,30 +38,39 @@ function testCorrectFinishSetup(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         thresholdKey);
 
     assert(validRegistrationParameters, 'Setup parameters should be valid');
+    
 
-    var transactionHash = contract.finishSetUp.sendTransaction(
+    if(validRegistrationParameters != true){
+        return;
+    }
+
+
+    var txHash = contract.finishSetUp.sendTransaction(
         numVoterPerRing,
         registrationStartTime,
         registrationEndTime,
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         thresholdKey,
         {from:eth.accounts[0], gas:4200000});
     
-
-    var transaction = eth.getTransaction(transactionHash);
-
-    while(transaction == null || transaction.blockNumber == null) {
-        var transaction = eth.getTransaction(transactionHash);
-    }
-
+    waitForTxMine(txHash);
     assert(contract.state.call() == 1, 'Contract did not change state.');
+
+    console.log('\n-------End Test For Contract Setup-------');
+    return contract.state.call() == 1;
 }
 
 function testThresholdKeyNotValid(e, contract) {
@@ -64,6 +82,9 @@ function testThresholdKeyNotValid(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         [123, 123]);
 
@@ -80,6 +101,9 @@ function testSecretPublicParamsNotValid(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         invalidSecretParams,
         thresholdKey);
     assert(validSecretParams == false, 'Secret shares should not be valid');
@@ -95,6 +119,9 @@ function testMaxVotersPerRing(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         thresholdKey);
 
@@ -110,6 +137,9 @@ function testInvalidStartTime(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         thresholdKey);
 
@@ -122,10 +152,21 @@ function testInvalidStartTime(e, contract) {
         registrationVotingGap,
         votingStartTime,
         votingEndTime,
+        numberVoterOptions,
+        tParties,
+        nParties,
         secretShareVerifyPublicParams,
         thresholdKey);
 
     assert(validSetup == false, 'Registration cant be less than current time');
 }
+
+
+function testVoteGapTimesValidity() {
+    
+}
+
+// var instance = deploySmartContractTest(testCorrectFinishSetup);
+
 
 

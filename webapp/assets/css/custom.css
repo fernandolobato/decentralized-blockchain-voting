@@ -1,0 +1,22 @@
+.center{ 
+    margin: 0 auto;
+    display: table;
+}
+
+#modal{
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+
+.tingle-modal-box__content{
+    background: black !important;
+}
+
+.tingle-modal-box__footer {
+    background:  black !important;
+}
+
+#registrationConfirmationText {
+    color: white;
+}

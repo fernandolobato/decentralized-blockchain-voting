@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<!--
+    Dimension by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+    <head>
+        <title>Voter Page</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+        <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <script src="./web3.min.js" type="text/javascript"></script>
+        <script src="../build/Voting.js"></script>
+
+        <link rel="stylesheet" href="assets/css/tingle.css">
+        <script src="assets/js/tingle.js"></script>
+    </head>
+    <body>
+
+        <!-- Wrapper -->
+            <div id="wrapper">
+
+                <!-- Header -->
+                    <header id="header">
+                        <div class="logo">
+                            <span class="icon fa-diamond"></span>
+                        </div>
+                        <div class="content">
+                            <div class="inner">
+                                <h1>Decentralized Voting</h1>
+                                
+                                <p id='electionDescription'>
+                                    
+                                </p>
+
+                            </div>
+                        </div>
+                        <nav>
+                            <ul>
+                                <li id="viewElectionTabButton">
+                                    <a href="#intro">Election Data</a>
+                                </li>
+
+                                <li id="downloadRingTabButton">
+                                    <a href="#ring">
+                                        Download Ring
+                                    </a>
+                                </li>
+
+                                <li id="castVoteTabButton">
+                                    <a href="#work">Cast Vote</a>
+                                </li>
+            
+
+                                <li id="viewVotersTabButton">
+                                    <a id="viewVotersButton" href="#about">View Voters</a>
+                                </li>
+
+                                <li id="viewVotesTabButton">
+                                    <a href="#contact">View Votes</a>
+                                </li>
+
+                                <li id="tallyTabButton">
+                                    <a href="#elements">Tally up!</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </header>
+
+                
+
+
+                <!-- Main -->
+                    <div id="main">
+
+                        <!-- VIEW ELECTION PARAMETERS -->
+                            <article id="intro">
+                                <h2 class="major">View Election Data</h2>
+                                
+                                <div id="electionInfo">
+                                    
+                                </div>
+
+                            </article>
+                        <!-- END VIEW ELECTION PARAMETERS -->
+
+                        <!-- CAST VOTER -->
+                            
+                            <article id="work">
+                                <h2 class="major">Cast Vote</h2>
+                                
+                                <form method="post" action="#">
+                                    <div class="field">
+                                        <label for="voteFile">Please upload Ring Signed Encrypted Vote in csv format.</label>
+                                        <input id="voteFile" type="file" onchange="VOTERS.parseVoteFile(event);" class="center">
+                                    </div>
+
+                                    <div class="field">
+                                        <button id="castVoteButton" class="button special icon fa-download center">Cast Vote</button>
+                                    </div>
+                                </form>
+                            </article>
+
+                        <!-- END CAST VOTE -->
+
+                        <!-- About -->
+                            <article id="about">
+                                
+                                <h2 class="major">Registered Voters</h2>
+                                
+                                <div class="table-wrapper">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Public Key</th>
+                                                    <th>Ring Idx</th>
+                                                    <th>Voter Idx</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="registeredPublicKeyTable">
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                            </article>
+
+                            <article id="ring">
+                                <h2 class="major"> Download Ring </h2>
+
+                                <form action="#" method="post">
+                                    <div class="field">
+                                        <label>Public Key to look for ring</label>
+                                        <input type="text" id="pubKeyX" name="pubKeyX" >
+                                    </div>
+
+                                    <div class="field">
+                                        <input type="text" id="pubKeyY" name="pubKeyY" >
+                                    </div>
+
+                                    <div class="field">
+                                        <button id="downloadRing" class="button special icon fa-download center">Download Ring</button>
+                                    </div>
+                                </form>
+
+                            </article>
+
+                        <!-- Contact -->
+                            <article id="contact">
+                                <h2 class="major">Votes</h2>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>C</th>
+                                                <th>r</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="registeredVotesTable">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+
+                        <!-- Elements -->
+                            <article id="elements">
+                                <h2 class="major">Election Results</h2>
+                                
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Option No.</th>
+                                            <th>Number of Votes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="electionResults">
+                                        
+                                    </tbody>
+                                </table>
+                                
+                            </article>
+
+                    </div>
+
+                <!-- Footer -->
+                    <footer id="footer">
+                        
+                    </footer>
+
+            </div>
+
+            <div id="modal">
+                <form method="post" action="#">   
+                    <div class="field">
+                        <label for="passcode">Account</label>
+                        <div class="select-wrapper">
+                            <select name="accounts" id="accounts">
+                                
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">  
+                        <label for="passcode">Passcode</label>
+                        <input class="center" type="password" name="passcode" id="passcode" />
+                    </div>
+                </form>
+            </div>
+
+        <!-- Custom Styles -->
+            <link rel="stylesheet" href="assets/css/custom.css">
+
+        <!-- BG -->
+            <div id="bg"></div>
+
+        <!-- Scripts -->
+            <script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/skel.min.js"></script>
+            <script src="assets/js/util.js"></script>
+            <script src="assets/js/main.js"></script>
+            <script src="scripts/general.js"></script>
+            <script src="scripts/votes.js"></script>
+            <script src="scripts/voters.js"></script>
+
+    </body>
+</html>
