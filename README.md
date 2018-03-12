@@ -1,6 +1,6 @@
 # Decentralized Voting on the Ethereum Blockchain
 
-This repo contains an implementation of a decentralized voting scheme on top of Ethereum in the form of a smart contract. The scheme uses linkable ring signatures and threshold cryptography to ensure voter privacy. For more information on the scheme works I wrote a paper available [here]().
+This repo contains an implementation of a decentralized voting scheme on top of Ethereum in the form of a smart contract. The scheme uses linkable ring signatures and threshold cryptography to ensure voter privacy. For more information on the scheme works please reference the paper available [here](http://aleph.com.mx/blockchain_voting.pdf).
 
 
 ## How does it work
@@ -9,7 +9,7 @@ The voting scheme is divided into the following phases after being deployed on t
 
 1. SETUP
 
-    Election authority uploads all informatio nabout the election. Length of voting and registration periods, threshold key for voters to encypt their votes and the voting options. 
+    Election authority uploads all information about the election. Length of voting and registration periods, threshold key for voters to encypt their votes and the voting options. 
     
 
 2. REGISTRATION
