@@ -290,6 +290,9 @@ contract Voting is owned{
         return false;
     }
 
+    function verifyRingSignature(uint256[3] message, uint256[] y, uint256 c_0, uint256[] s, uint256[2] link) constant returns (bool) {
+        return LinkableRingSignature.verifyRingSignature(uint256(sha3(message)), y, c_0, s, link);
+    }
 
     function publishSecretShares(uint idx, uint256 subSecret) inState(State.FINISHED) returns (bool) {
         
