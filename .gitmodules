@@ -1,6 +1,6 @@
 [submodule "ecc_linkable_ring_signatures"]
-	path = ecc_linkable_ring_signatures
+	path = develop-env/ecc_linkable_ring_signatures
 	url = https://github.com/fernandolobato/ecc_linkable_ring_signatures
 [submodule "ecc_verifiable_threshold_cryptosystem"]
-	path = ecc_verifiable_threshold_cryptosystem
+	path = develop-env/ecc_verifiable_threshold_cryptosystem
 	url = https://github.com/fernandolobato/ecc_verifiable_threshold_cryptosystem

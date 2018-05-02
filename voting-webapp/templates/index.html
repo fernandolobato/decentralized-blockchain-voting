@@ -9,14 +9,15 @@
 		<title>Admin Page</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="{{ url_for('static',filename='assets/css/main.css') }}" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<script src="./web3.min.js" type="text/javascript"></script>
-		<script src="../build/Voting.js"></script>
+		<noscript><link rel="stylesheet" href="{{ url_for('static',filename='assets/css/noscript.css') }}" /></noscript>
+		<script src="{{ url_for('static',filename='./web3.min.js') }}" type="text/javascript"></script>
+		
+		<script src="{{ url_for('static',filename='Voting.js') }}"></script>
 
-		<link rel="stylesheet" href="assets/css/tingle.css">
-		<script src="assets/js/tingle.js"></script>
+		<link rel="stylesheet" href="{{ url_for('static',filename='assets/css/tingle.css') }}">
+		<script src="{{ url_for('static',filename='assets/js/tingle.js') }}"></script>
 	</head>
 	<body>
 
@@ -233,21 +234,23 @@
 			</div>
 
 		<!-- Custom Styles -->
-			<link rel="stylesheet" href="assets/css/custom.css">
+			<link rel="stylesheet" href="{{ url_for('static',filename='assets/css/custom.css') }}">
 
 		<!-- BG -->
 			<div id="bg"></div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-			<script src="scripts/general.js"></script>
-			<script src="scripts/admin.js"></script>
-			<script src="scripts/setup.js"></script>
-			<script src="scripts/register.js"></script>
-			<script src="scripts/votes.js"></script>
+			<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
+			<script src="{{ url_for('static',filename='assets/js/skel.min.js') }}"></script>
+			<script src="{{ url_for('static',filename='assets/js/util.js') }}"></script>
+			<script src="{{ url_for('static',filename='assets/js/main.js') }}"></script>
+			
+			<script src="{{ url_for('static',filename='scripts/general.js') }}"></script>
+
+			<script src="{{ url_for('static',filename='scripts/admin.js') }}"></script>
+			<script src="{{ url_for('static',filename='scripts/setup.js') }}"></script>
+			<script src="{{ url_for('static',filename='scripts/register.js') }}"></script>
+			<script src="{{ url_for('static',filename='scripts/votes.js') }}"></script>
 
 	</body>
 </html>

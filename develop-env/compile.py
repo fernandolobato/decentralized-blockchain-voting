@@ -16,12 +16,13 @@ def format_contract(contract, name):
     contract = json.loads(contract)
 
     remove_keys = []
+    
+    if 'contracts' not in contract : return
 
     for key,val in contract['contracts'].items():
         remove_keys.append(key)
         new_key = key[key.index(':')+1 : ]
         contract['contracts'][new_key] = {'abi': json.loads(val['abi']), 'bin': '0x' + val['bin']}
-
 
     for k in remove_keys:
         del contract['contracts'][k]

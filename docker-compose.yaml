@@ -1,0 +1,26 @@
+version: '2'
+services:
+
+  ethereum:
+    image: geth
+    build:
+      context: geth/
+    container_name: geth
+    ports:
+      - "8545:8545"
+  
+  voting-webapp:
+    image: voting-webapp
+    build:
+      context: voting-webapp/
+    container_name: webapp
+    ports:
+      - "8888:5000"
+
+  developer-enviornment:
+    image: app
+    build: 
+      context: develop-env/
+    container_name: developer-enviornment
+    stdin_open: true
+    tty: true

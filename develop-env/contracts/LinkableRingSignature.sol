@@ -1,6 +1,6 @@
 pragma solidity ^0.4.10;
 
-import "./SECP256k1.sol";
+import "./SECP256K1.sol";
 
 library LinkableRingSignature {
 
@@ -115,7 +115,7 @@ library LinkableRingSignature {
         return 0;
     }
 
-    function polynomial_exp_mod(uint256[2] base, uint256 exponent, uint256[3] polymod, uint256 p) internal constant returns (uint256[2] memory s) {
+    function polynomial_exp_mod(uint256[2] base, uint256 exponent, uint256[3] polymod, uint256 p) internal view returns (uint256[2] memory s) {
         if( exponent > p) {
             return [uint256(0), uint256(0)];
         }
@@ -146,7 +146,7 @@ library LinkableRingSignature {
         }
     }
 
-    function polynomial_multiply_mod(uint256[2] m1, uint256[2] m2, uint256[3] polymod, uint256 p) internal constant returns(uint256[2]) {
+    function polynomial_multiply_mod(uint256[2] m1, uint256[2] m2, uint256[3] polymod, uint256 p) internal view returns(uint256[2]) {
         uint256[3] memory prod = [uint256(0), uint256(0), uint256(0)];
 
         for(uint i = 0; i < 2; i++) {
@@ -159,7 +159,7 @@ library LinkableRingSignature {
     }
 
 
-    function polynomial_reduce_mod(uint256[3] poly, uint256[3] polymod, uint256 p) internal constant returns(uint256[2] memory res) {
+    function polynomial_reduce_mod(uint256[3] poly, uint256[3] polymod, uint256 p) internal view returns(uint256[2] memory res) {
 
         if( poly[2] != 0) {
 
@@ -171,7 +171,7 @@ library LinkableRingSignature {
         }        
     }
 
-    function mapToCurveReal(uint256 x) internal constant returns (uint256[2]) {
+    function mapToCurveReal(uint256 x) internal view returns (uint256[2]) {
         x -= 1;
         uint256 y = 0;
         bool found = false;
@@ -202,21 +202,21 @@ library LinkableRingSignature {
         return Q;
     }
 
-    function h2(uint256[] y) internal constant  returns (uint256[2] memory Q) {
+    function h2(uint256[] y) internal view returns (uint256[2] memory Q) {
         uint256[2] memory T = mapToCurveReal(hashToInt(y));
         Q[0] = T[0];
         Q[1] = T[1];
     }   
 
-    function h1(uint256[] y, uint256[2] link, uint256 message, uint256[2] z_1, uint256[2] z_2) internal constant returns (uint256) {
+    function h1(uint256[] y, uint256[2] link, uint256 message, uint256[2] z_1, uint256[2] z_2) internal view returns (uint256) {
         return uint256(sha3(y, link, message, z_1, z_2));
     }
 
-    function hashToInt(uint256[] y) internal constant  returns (uint256){
+    function hashToInt(uint256[] y) internal view returns (uint256){
         return uint256(sha3(y)) ;
     }
 
-    function multiplyAddPoints(uint256 a, uint256[2] b, uint256 c, uint256[2] d) internal constant returns (uint256[2]) {
+    function multiplyAddPoints(uint256 a, uint256[2] b, uint256 c, uint256[2] d) internal view returns (uint256[2]) {
         uint256[3] memory T = Secp256k1._add(Secp256k1._mul(a, b), Secp256k1._mul(c, d));
         ECCMath.toZ1(T, pp);
         uint256[2] memory Q;
@@ -225,7 +225,7 @@ library LinkableRingSignature {
         return Q;
     }
 
-    function verifyRingSignature(uint256 message, uint256[] y, uint256 c_0, uint256[] s, uint256[2] link) internal constant returns (bool) {
+    function verifyRingSignature(uint256 message, uint256[] y, uint256 c_0, uint256[] s, uint256[2] link) internal view returns (bool) {
         uint[2] memory G;
         G[0] = Gx;
         G[1] = Gy;
