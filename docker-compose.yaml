@@ -22,5 +22,3 @@ services:
     build: 
       context: develop-env/
     container_name: developer-enviornment
-    stdin_open: true
-    tty: true
