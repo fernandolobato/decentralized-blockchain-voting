@@ -1,6 +1,6 @@
 pragma solidity ^0.4.10;
 
-import "./SECP256k1.sol";
+import "./SECP256K1.sol";
 import "./LinkableRingSignature.sol";
 import "./Owned.sol";
 
