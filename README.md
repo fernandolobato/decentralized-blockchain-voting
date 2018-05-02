@@ -91,7 +91,7 @@ $ geth --datadir /PATH/TO/FOLDER/ init /PATH/TO/FOLDER/genesis.json
 Now you are ready to run your private ethereum network:
 
 ```bash
-$ geth --datadir /PATH/TO/FOLDER/ --nodiscover --rpc --rpcapi="db,eth,net,web3,personal,miner,admin" --rpcport "8545 --rpcaddr "0.0.0.0" --rpccordomain "*" --nat "any"
+$ geth --datadir /PATH/TO/FOLDER/ --nodiscover --rpc --rpcapi="db,eth,net,web3,personal,miner,admin" --rpcport "8545" --rpcaddr "0.0.0.0" --rpccorsdomain "*" --nat "any"
 ```
 
 This will set up an ethereum client that takes rpc api connection on port 8545 and can be accessed by other computers on your network.
